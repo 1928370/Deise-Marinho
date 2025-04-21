@@ -14,18 +14,61 @@
         }
     
         h1 {
-        text-align: center;
-        color: #ffffff;
-        margin-top: 20px;
-        font-size: 3em;
-        font-weight: bold;
-        font-family: 'Poppins', Arial, sans-serif;
-        background: linear-gradient(135deg, #007bff, #ff7f50);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
+            text-align: center;
+            color: #ffffff;
+            margin-top: 20px;
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #007bff, #ff7f50);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+    
+        /* Contêiner de login */
+        #login {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+    
+        #login div {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+    
+        #login input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+    
+        #login button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+    
+        #login button:hover {
+            background: linear-gradient(135deg, #0056b3, #003f7f);
+        }
     
         /* Contêiner de dias */
         #days-container {
@@ -129,78 +172,57 @@
             background: linear-gradient(135deg, #5a6268, #444b50);
         }
     
-        /* Controles administrativos */
-        .admin-controls {
-            text-align: center;
-            margin: 20px 0;
-            display: flex;
-            gap: 10px;
+        /* Media Queries para dispositivos móveis */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+    
+            .day-button {
+                padding: 10px 15px;
+                font-size: 1em;
+            }
+    
+            .slot {
+                width: 100px;
+                height: 40px;
+                font-size: 0.9em;
+            }
+    
+            #login div {
+                padding: 20px;
+            }
+    
+            #calendar-container {
+                padding: 15px;
+            }
         }
     
-        .admin-controls button {
-            padding: 10px 20px;
-            font-size: 1em;
-            font-weight: bold;
-            color: white;
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5em;
+            }
     
-        .admin-controls button:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #0056b3, #003f7f);
-        }
+            .day-button {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
     
-        /* Contêiner de seleção de data */
-        #date-picker-container {
-            text-align: center;
-            margin-top: 20px;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            max-width: 600px;
-            margin: 20px auto;
-        }
+            .slot {
+                width: 80px;
+                height: 35px;
+                font-size: 0.8em;
+            }
     
-        #date-picker-container h3 {
-            font-size: 1.5em;
-            color: #333;
-            margin-bottom: 15px;
-        }
+            #login div {
+                padding: 15px;
+            }
     
-        #date-picker-container input {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            width: 70%;
+            #calendar-container {
+                padding: 10px;
+            }
         }
-    
-        #date-picker-container button {
-            padding: 10px 20px;
-            margin-left: 10px;
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-    
-        #date-picker-container button:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #0056b3, #003f7f);
-        }
-
-        
-    </style>
+    </style>>
 </head>
 <body>
 
