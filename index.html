@@ -315,7 +315,7 @@
 
             // Envia mensagem para o WhatsApp
             const message = `Olá, gostaria de agendar o horário: ${slot.time}\n*Nome:* ${clientName}`;
-            const phoneNumber = "5534988117496"; // Substitua pelo número da dona
+            const phoneNumber = "5534988302860"; // Substitua pelo número da dona
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             const confirmSend = confirm('Você será redirecionado para o WhatsApp para confirmar o agendamento. Deseja continuar?');
 
@@ -594,7 +594,7 @@ saveSlotsToLocalStorage(); // Salva as alterações no Local Storage
         if (clientName) {
             // Envia mensagem para o WhatsApp
             const message = `Olá, gostaria de agendar para o dia: ${dateInput}\n*Nome:* ${clientName}`;
-            const phoneNumber = "5534988117496"; // Substitua pelo número da dona
+            const phoneNumber = "5534988302860"; // Substitua pelo número da dona
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             const confirmSend = confirm('Você será redirecionado para o WhatsApp para confirmar o agendamento. Deseja continuar?');
 
