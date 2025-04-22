@@ -12,7 +12,6 @@
             margin: 0;
             padding: 0;
         }
-    
         h1 {
             text-align: center;
             color: #ffffff;
@@ -25,7 +24,6 @@
             -webkit-text-fill-color: transparent;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
-    
         /* Contêiner de login */
         #login {
             display: flex;
@@ -34,7 +32,6 @@
             height: 100vh;
             padding: 20px;
         }
-    
         #login div {
             background: #ffffff;
             padding: 30px;
@@ -43,7 +40,6 @@
             width: 100%;
             max-width: 400px;
         }
-    
         #login input {
             width: 100%;
             padding: 12px;
@@ -52,7 +48,6 @@
             border-radius: 8px;
             font-size: 16px;
         }
-    
         #login button {
             width: 100%;
             padding: 12px;
@@ -306,7 +301,6 @@
         <button onclick="showRegisterForm()" style="width: 100%; padding: 12px; margin-top: 10px; background: linear-gradient(135deg, #28a745, #218838); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold;">Cadastrar-se</button>
     </div>
 </div>
-
 <div id="register" style="display: none; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #007bff, #0056b3, #ff7f50);">
     <div style="background: #ffffff; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); width: 100%; max-width: 400px;">
         <h2 style="text-align: center; color: #333; margin-bottom: 20px; font-size: 1.8em; font-weight: bold;">Criar Conta</h2>
@@ -478,7 +472,6 @@
         }
     }
 };
-
             calendar.appendChild(slotDiv);
         });
     }
@@ -694,7 +687,6 @@ Object.keys(weekSlots).forEach(day => {
 });
 saveSlotsToLocalStorage(); // Salva as alterações no Local Storage
 
-
     // Login
     function login() {
     const username = document.getElementById('username').value;
@@ -748,8 +740,6 @@ window.addEventListener('storage', (event) => {
         }
     }
 });
-
-
 
 function cancelBooking(day, index) {
     weekSlots[day][index].occupied = false;
