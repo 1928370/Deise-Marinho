@@ -79,6 +79,68 @@
             margin: 20px auto;
             max-width: 800px;
         }
+
+        /* Estilo para os botões administrativos */
+.admin-button {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+}
+
+.admin-button:hover {
+    transform: scale(1.05);
+}
+
+/* Botão de adicionar horário */
+.add-slot {
+    background: linear-gradient(135deg, #28a745, #218838);
+}
+
+.add-slot:hover {
+    background: linear-gradient(135deg, #218838, #1e7e34);
+}
+
+/* Botão de remover horário */
+.remove-slot {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+}
+
+.remove-slot:hover {
+    background: linear-gradient(135deg, #c82333, #bd2130);
+}
+
+/* Botão de limpar horários */
+.clear-slots {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+}
+
+.clear-slots:hover {
+    background: linear-gradient(135deg, #e0a800, #d39e00);
+}
+
+/* Estilo para o menu do administrador */
+#admin-menu button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #0056b3, #003f7f);
+}
+
+/* Estilo para a lista de usuários */
+#user-list ul {
+    margin: 0;
+    padding: 0;
+}
+
+#user-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
     
         .day-button {
             padding: 15px 25px;
@@ -153,24 +215,31 @@
             color: #155724;
         }
     
-        /* Botão de voltar */
-        .back-button {
-            padding: 10px 20px;
-            font-size: 1em;
-            font-weight: bold;
-            color: white;
-            background: linear-gradient(135deg, #6c757d, #5a6268);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-    
-        .back-button:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #5a6268, #444b50);
-        }
+        /* Botão de voltar ao login */
+.back-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #6c757d, #5a6268);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.back-button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #5a6268, #444b50);
+}
+
+/* Centraliza o botão "Voltar ao Login" */
+.back-button[onclick="returnToLogin()"] {
+    margin: 20px auto;
+    display: block;
+}
     
         /* Media Queries para dispositivos móveis */
         @media (max-width: 768px) {
@@ -231,13 +300,35 @@
 <div id="login" style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #007bff, #0056b3, #ff7f50);">
     <div style="background: #ffffff; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); width: 100%; max-width: 400px;">
         <h2 style="text-align: center; color: #333; margin-bottom: 20px; font-size: 1.8em; font-weight: bold;">Bem-vindo</h2>
-        <input type="text" id="username" placeholder="Usuário" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);">
-        <input type="password" id="password" placeholder="Senha" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);">
-        <button onclick="login()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #007bff, #0056b3); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s, transform 0.2s;">
-            Entrar
-        </button>
+        <input type="text" id="username" placeholder="Usuário" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+        <input type="password" id="password" placeholder="Senha" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+        <button onclick="login()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #007bff, #0056b3); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold;">Entrar</button>
+        <button onclick="showRegisterForm()" style="width: 100%; padding: 12px; margin-top: 10px; background: linear-gradient(135deg, #28a745, #218838); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold;">Cadastrar-se</button>
     </div>
 </div>
+
+<div id="register" style="display: none; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #007bff, #0056b3, #ff7f50);">
+    <div style="background: #ffffff; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); width: 100%; max-width: 400px;">
+        <h2 style="text-align: center; color: #333; margin-bottom: 20px; font-size: 1.8em; font-weight: bold;">Criar Conta</h2>
+        <input type="text" id="new-username" placeholder="Usuário" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+        <input type="password" id="new-password" placeholder="Senha" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+        <button onclick="register()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #28a745, #218838); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold;">Registrar</button>
+        <button onclick="showLoginForm()" style="width: 100%; padding: 12px; margin-top: 10px; background: linear-gradient(135deg, #6c757d, #5a6268); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold;">Voltar</button>
+    </div>
+</div>
+
+<div id="calendar-container">
+    <div id="calendar"></div>
+    <button class="back-button" onclick="goBack()">Voltar</button>
+    <div class="admin-controls" id="admin-controls" style="display: none;">
+        <button class="admin-button add-slot" onclick="addSlot()">Adicionar Horário</button>
+        <button class="admin-button remove-slot" onclick="removeSlot()">Remover Horário</button>
+        <button class="admin-button clear-slots" onclick="clearAllSlots()">Limpar Todos os Horários</button>
+    </div>
+</div>
+
+<!-- Botão "Voltar ao Login" fora do contêiner -->
+<button class="back-button" onclick="returnToLogin()" style="margin: 20px auto; display: block;">Voltar ao Login</button>
 
 <div id="days-container" style="display: none;">
     <button class="day-button" onclick="selectDay('domingo')">Domingo</button>
@@ -254,9 +345,9 @@
     <div id="calendar"></div>
     <button class="back-button" onclick="goBack()">Voltar</button>
     <div class="admin-controls" id="admin-controls" style="display: none;">
-        <button onclick="addSlot()">Adicionar Horário</button>
-        <button onclick="removeSlot()">Remover Horário</button>
-        <button onclick="clearAllSlots()">Limpar Todos os Horários</button>
+        <button class="admin-button add-slot" onclick="addSlot()">Adicionar Horário</button>
+        <button class="admin-button remove-slot" onclick="removeSlot()">Remover Horário</button>
+        <button class="admin-button clear-slots" onclick="clearAllSlots()">Limpar Todos os Horários</button>
     </div>
 </div>
 
@@ -266,6 +357,16 @@
     <button onclick="selectSpecificDate()" style="padding: 10px 20px; margin-left: 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;">
         Selecionar Data
     </button>
+</div>
+
+<div id="admin-menu" style="display: none; text-align: center; margin-top: 20px;">
+    <button onclick="toggleUserList()" style="padding: 12px 20px; background: linear-gradient(135deg, #007bff, #0056b3); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin: 10px;">
+        Menu do Administrador
+    </button>
+    <div id="user-list" style="display: none; margin-top: 20px; background: #f4f4f4; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+        <h3>Usuários Cadastrados</h3>
+        <ul id="user-list-content" style="list-style: none; padding: 0; font-size: 16px; color: #333;"></ul>
+    </div>
 </div>
 
 <script>
@@ -626,6 +727,131 @@ function cancelBooking(day, index) {
     saveSlotsToLocalStorage(); // Salva no Local Storage
     renderSlots(day); // Atualiza o calendário
     alert('Agendamento cancelado com sucesso.');
+}
+
+
+// Função para exibir o formulário de cadastro
+function showRegisterForm() {
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('register').style.display = 'flex';
+}
+
+// Função para exibir o formulário de login
+function showLoginForm() {
+    document.getElementById('register').style.display = 'none';
+    document.getElementById('login').style.display = 'flex';
+}
+
+// Função para registrar um novo usuário
+function register() {
+    const newUsername = document.getElementById('new-username').value;
+    const newPassword = document.getElementById('new-password').value;
+
+    if (newUsername && newPassword) {
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const userExists = users.some(user => user.username === newUsername);
+
+        if (userExists) {
+            alert('Usuário já existe! Escolha outro nome de usuário.');
+        } else {
+            users.push({ username: newUsername, password: newPassword });
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('Cadastro realizado com sucesso!');
+            showLoginForm();
+        }
+    } else {
+        alert('Por favor, preencha todos os campos.');
+    }
+}
+
+// Função para voltar ao login a partir da página de agendamento
+function returnToLogin() {
+    document.getElementById('calendar-container').style.display = 'none';
+    document.getElementById('login').style.display = 'flex';
+}
+
+// Função para alternar a exibição da lista de usuários
+function toggleUserList() {
+    const userList = document.getElementById('user-list');
+    const userListContent = document.getElementById('user-list-content');
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+
+    if (userList.style.display === 'none') {
+        userList.style.display = 'block';
+        userListContent.innerHTML = ''; // Limpa a lista antes de renderizar
+
+        if (users.length > 0) {
+            users.forEach((user, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Usuário: ${user.username}`;
+                
+                // Botão para excluir o usuário
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Excluir';
+                deleteButton.style.marginLeft = '10px';
+                deleteButton.style.padding = '5px 10px';
+                deleteButton.style.background = 'linear-gradient(135deg, #dc3545, #c82333)';
+                deleteButton.style.color = 'white';
+                deleteButton.style.border = 'none';
+                deleteButton.style.borderRadius = '5px';
+                deleteButton.style.cursor = 'pointer';
+                deleteButton.onclick = () => deleteUser(index);
+
+                listItem.appendChild(deleteButton);
+                userListContent.appendChild(listItem);
+            });
+        } else {
+            const noUsersMessage = document.createElement('li');
+            noUsersMessage.textContent = 'Nenhum usuário cadastrado.';
+            userListContent.appendChild(noUsersMessage);
+        }
+    } else {
+        userList.style.display = 'none';
+    }
+}
+
+// Função para excluir um usuário
+function deleteUser(index) {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const userToDelete = users[index];
+
+    const confirmDelete = confirm(`Tem certeza de que deseja excluir o usuário "${userToDelete.username}"?`);
+    if (confirmDelete) {
+        users.splice(index, 1); // Remove o usuário da lista
+        localStorage.setItem('users', JSON.stringify(users)); // Atualiza o Local Storage
+        alert(`Usuário "${userToDelete.username}" foi excluído com sucesso.`);
+        toggleUserList(); // Atualiza a lista de usuários exibida
+    }
+}
+
+// Exibe o menu do administrador ao fazer login como admin
+function login() {
+    const username = document.getElementById('username').value.toLowerCase(); // Converte para minúsculas
+    const password = document.getElementById('password').value;
+
+    if (username === 'admin' && password === '1234') {
+        alert('Bem-vindo, Administrador!');
+        loginForm.style.display = 'none';
+        daysContainer.style.display = 'flex';
+        adminControls.style.display = 'block';
+        document.getElementById('admin-menu').style.display = 'block'; // Exibe o menu do administrador
+        document.getElementById('date-picker-container').style.display = 'block'; // Exibe o seletor de data
+        scheduleReminders(); // Inicia os lembretes
+    } else {
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const user = users.find(user => user.username.toLowerCase() === username && user.password === password); // Compara em minúsculas
+
+        if (user) {
+            alert(`Bem-vindo, ${user.username}!`);
+            loginForm.style.display = 'none';
+            daysContainer.style.display = 'flex';
+            adminControls.style.display = 'none'; // Esconde os controles do administrador
+            document.getElementById('date-picker-container').style.display = 'block'; // Exibe o seletor de data para clientes
+            scheduleReminders(); // Inicia os lembretes
+        } else {
+            alert('Usuário ou senha inválidos!');
+        }
+    }
 }
     // Inicializa os horários
     saveSlotsToLocalStorage();
