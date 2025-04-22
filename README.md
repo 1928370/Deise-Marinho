@@ -369,6 +369,37 @@
     </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js"></script>
+
+<script>
+    function salvarDados() {
+      const referencia = database.ref('agendamentos');
+      referencia.push({
+        nome: "Cliente Exemplo",
+        horario: "10:00",
+        dia: "segunda"
+      }).then(() => {
+        alert("Dados salvos com sucesso!");
+      }).catch((error) => {
+        console.error("Erro ao salvar dados:", error);
+      });
+    }
+  </script>
+
+<script>
+    function lerDados() {
+      const referencia = database.ref('agendamentos');
+      referencia.on('value', (snapshot) => {
+        console.log(snapshot.val());
+      });
+    }
+  </script>
+  <button onclick="salvarDados()">Salvar Dados</button>
+  <button onclick="lerDados()">Ler Dados</button>
+
 <script>
     // Lista de horários por dia da semana
     let weekSlots = JSON.parse(localStorage.getItem('weekSlots')) || {
@@ -744,11 +775,18 @@ function showLoginForm() {
 
 // Função para registrar um novo usuário
 function register() {
-    const newUsername = document.getElementById('new-username').value;
+    const newUsername = document.getElementById('new-username').value.toLowerCase(); // Converte para minúsculas
     const newPassword = document.getElementById('new-password').value;
 
     if (newUsername && newPassword) {
         const users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Impede que o cliente use o nome de usuário "admin"
+        if (newUsername === 'admin') {
+            alert('O nome de usuário "admin" é reservado e não pode ser usado.');
+            return;
+        }
+
         const userExists = users.some(user => user.username === newUsername);
 
         if (userExists) {
@@ -829,23 +867,26 @@ function login() {
     const username = document.getElementById('username').value.toLowerCase(); // Converte para minúsculas
     const password = document.getElementById('password').value;
 
+    // Verifica se é o administrador
     if (username === 'admin' && password === '1234') {
         alert('Bem-vindo, Administrador!');
         loginForm.style.display = 'none';
         daysContainer.style.display = 'flex';
-        adminControls.style.display = 'block';
+        adminControls.style.display = 'block'; // Exibe os controles do administrador
         document.getElementById('admin-menu').style.display = 'block'; // Exibe o menu do administrador
         document.getElementById('date-picker-container').style.display = 'block'; // Exibe o seletor de data
         scheduleReminders(); // Inicia os lembretes
     } else {
+        // Verifica se é um cliente
         const users = JSON.parse(localStorage.getItem('users')) || [];
-        const user = users.find(user => user.username.toLowerCase() === username && user.password === password); // Compara em minúsculas
+        const user = users.find(user => user.username.toLowerCase() === username && user.password === password);
 
         if (user) {
             alert(`Bem-vindo, ${user.username}!`);
             loginForm.style.display = 'none';
             daysContainer.style.display = 'flex';
             adminControls.style.display = 'none'; // Esconde os controles do administrador
+            document.getElementById('admin-menu').style.display = 'none'; // Esconde o menu do administrador
             document.getElementById('date-picker-container').style.display = 'block'; // Exibe o seletor de data para clientes
             scheduleReminders(); // Inicia os lembretes
         } else {
@@ -853,6 +894,23 @@ function login() {
         }
     }
 }
+
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCSxkWYbvtHsRa6r9HhVH4o5IPsV2NXaL0",
+  authDomain: "agende-aqui-42d2e.firebaseapp.com",
+  databaseURL: "https://agende-aqui-42d2e-default-rtdb.firebaseio.com",
+  projectId: "agende-aqui-42d2e",
+  storageBucket: "agende-aqui-42d2e.firebasestorage.app",
+  messagingSenderId: "1065572473481",
+  appId: "1:1065572473481:web:0b3736ae002d21e48a0458",
+  measurementId: "G-L1B2HQBLZD"
+};
+
+// Inicializa o Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
     // Inicializa os horários
     saveSlotsToLocalStorage();
 </script>
