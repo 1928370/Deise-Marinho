@@ -43,6 +43,26 @@ app.post('/usuarios', async (req, res) => {
     }
 });
 
+// Rota para autenticar um usuário
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const result = await pool.query(
+            'SELECT * FROM usuarios WHERE username = $1 AND password = $2',
+            [username, password]
+        );
+
+        if (result.rows.length > 0) {
+            res.status(200).send('Login bem-sucedido');
+        } else {
+            res.status(401).send('Usuário ou senha inválidos');
+        }
+    } catch (err) {
+        console.error('Erro ao autenticar usuário:', err);
+        res.status(500).send('Erro no servidor');
+    }
+});
+
 // Inicia o servidor
 const PORT = 3000;
 app.listen(PORT, () => {
