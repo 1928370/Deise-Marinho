@@ -691,26 +691,32 @@
 
 
         // Login
-        function login() {
-            const username = document.getElementById('username').value;
+        async function login() {
+            const username = document.getElementById('username').value.toLowerCase(); // Converte para minúsculas
             const password = document.getElementById('password').value;
 
-            if (username === 'admin' && password === '1234') {
-                alert('Bem-vindo, Administrador!');
-                loginForm.style.display = 'none';
-                daysContainer.style.display = 'flex';
-                adminControls.style.display = 'block';
-                document.getElementById('date-picker-container').style.display = 'block'; // Exibe o seletor de data
-                scheduleReminders(); // Inicia os lembretes
-            } else if (username === 'cliente' && password === '1234') {
-                alert('Bem-vindo, Cliente!');
-                loginForm.style.display = 'none';
-                daysContainer.style.display = 'flex';
-                adminControls.style.display = 'none';
-                document.getElementById('date-picker-container').style.display = 'block'; // Exibe o seletor de data
-                scheduleReminders(); // Inicia os lembretes
+            if (username && password) {
+                try {
+                    const response = await fetch(`${API_URL}/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password }),
+                    });
+
+                    if (response.ok) {
+                        alert('Login bem-sucedido!');
+                        loginForm.style.display = 'none';
+                        daysContainer.style.display = 'flex';
+                        adminControls.style.display = username === 'admin' ? 'block' : 'none';
+                    } else {
+                        alert('Usuário ou senha inválidos!');
+                    }
+                } catch (error) {
+                    console.error('Erro ao fazer login:', error);
+                    alert('Erro ao fazer login. Verifique sua conexão.');
+                }
             } else {
-                alert('Usuário ou senha inválidos!');
+                alert('Por favor, preencha todos os campos.');
             }
         }
 
