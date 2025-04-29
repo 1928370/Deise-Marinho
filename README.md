@@ -392,7 +392,7 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost:3000'; // URL do servidor Node.js
+        const API_URL = 'http://192.168.100.9:3000'; // Substitua SEU_ENDERECO_IP_LOCAL pelo IP do servidor
     </script>
 
     <script>
