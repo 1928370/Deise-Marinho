@@ -1,909 +1,112 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+function inscrever(evento) {
+    document.getElementById('eventoNome').value = evento;
+    document.getElementById('formulario').style.display = "block";
+}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendamento de Horários</title>
+function fecharFormulario() {
+    document.getElementById('formulario').style.display = "none";
+}
 
-    <style>
-        /* Estilo global */
-        body {
-            font-family: 'Poppins', Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
+function processarInscricao(event) {
+    event.preventDefault();
+
+    const nome = document.getElementById('nome').value;
+    const email = document.getElementById('email').value;
+    const quantidade = document.getElementById('quantidade').value;
+    const eventoNome = document.getElementById('eventoNome').value;
+
+    alert(`Inscrição realizada com sucesso!\nEvento: ${eventoNome}\nNome: ${nome}\nEmail: ${email}\nQuantidade de Ingressos: ${quantidade}`);
+    
+    fecharFormulario();
+    document.getElementById('inscricaoForm').reset();
+}
+
+// Adicionando efeito de luzes piscando no cabeçalho
+function iniciarEfeitoLuzes() {
+    const header = document.querySelector('header');
+    let cores = ['#ff6f61', '#ff8566', '#ff9a9e', '#fad0c4'];
+    let indice = 0;
+
+    setInterval(() => {
+        header.style.boxShadow = `0 0 20px ${cores[indice]}, 0 0 40px ${cores[(indice + 1) % cores.length]}`;
+        indice = (indice + 1) % cores.length;
+    }, 500);
+}
+
+// Função para verificar se o usuário é o dono
+function verificarDono() {
+    const senhaDono = prompt("Digite a senha para acessar a Área do Dono:");
+    const senhaCorreta = "senha123"; // Substitua por uma senha segura
+
+    if (senhaDono === senhaCorreta) {
+        alternarArea('dono');
+    } else {
+        alert("Senha incorreta! Acesso negado.");
+    }
+}
+
+// Modificando o botão para chamar a verificação de senha
+const botaoDono = document.querySelector("button[onclick=\"alternarArea('dono')\"]");
+if (botaoDono) {
+    botaoDono.setAttribute("onclick", "verificarDono()");
+}
+
+// Função para enviar uma requisição POST para adicionar um evento
+async function enviarEvento(nome, data, local) {
+    try {
+        const response = await fetch('http://localhost:3000/api/eventos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ nome, data, local }),
+        });
+
+        if (response.ok) {
+            const evento = await response.json();
+            alert(`Evento cadastrado com sucesso!\nNome: ${evento.nome}\nData: ${evento.data}\nLocal: ${evento.local}`);
+        } else {
+            const error = await response.json();
+            alert(`Erro ao cadastrar evento: ${error.error}`);
         }
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+        alert('Erro ao conectar ao servidor.');
+    }
+}
 
-        h1 {
-            text-align: center;
-            color: #ffffff;
-            margin-top: 20px;
-            font-size: 3em;
-            font-weight: bold;
-            background: linear-gradient(135deg, #007bff, #ff7f50);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
+// Adicionando logs para depuração na função carregarEventos
+async function carregarEventos() {
+    try {
+        const response = await fetch('http://localhost:3000/api/eventos');
+        console.log('Resposta do servidor:', response);
+        if (response.ok) {
+            const eventos = await response.json();
+            console.log('Eventos recebidos:', eventos);
+            const eventosContainer = document.getElementById('eventos');
 
-        /* Contêiner de login */
-        #login {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding: 20px;
-        }
-
-        #login div {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-        }
-
-        #login input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-
-        #login button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        #login button:hover {
-            background: linear-gradient(135deg, #0056b3, #003f7f);
-        }
-
-        /* Contêiner de dias */
-        #days-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px auto;
-            max-width: 800px;
-        }
-
-        /* Estilo para os botões administrativos */
-        .admin-button {
-            padding: 12px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin: 10px;
-        }
-
-        .admin-button:hover {
-            transform: scale(1.05);
-        }
-
-        /* Botão de adicionar horário */
-        .add-slot {
-            background: linear-gradient(135deg, #28a745, #218838);
-        }
-
-        .add-slot:hover {
-            background: linear-gradient(135deg, #218838, #1e7e34);
-        }
-
-        /* Botão de remover horário */
-        .remove-slot {
-            background: linear-gradient(135deg, #dc3545, #c82333);
-        }
-
-        .remove-slot:hover {
-            background: linear-gradient(135deg, #c82333, #bd2130);
-        }
-
-        /* Botão de limpar horários */
-        .clear-slots {
-            background: linear-gradient(135deg, #ffc107, #e0a800);
-        }
-
-        .clear-slots:hover {
-            background: linear-gradient(135deg, #e0a800, #d39e00);
-        }
-
-        /* Estilo para o menu do administrador */
-        #admin-menu button:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #0056b3, #003f7f);
-        }
-
-        /* Estilo para a lista de usuários */
-        #user-list ul {
-            margin: 0;
-            padding: 0;
-        }
-
-        #user-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .day-button {
-            padding: 15px 25px;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: white;
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .day-button:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #0056b3, #003f7f);
-        }
-
-        /* Contêiner do calendário */
-        #calendar-container {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            max-width: 900px;
-            margin: 20px auto;
-        }
-
-        #calendar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .slot {
-            width: 120px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1em;
-            font-weight: bold;
-            color: #333;
-            background-color: #cce5ff;
-            border: 1px solid #007bff;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .slot:hover {
-            transform: scale(1.05);
-            background-color: #b3d7ff;
-        }
-
-        .occupied {
-            background-color: #f8d7da;
-            color: #721c24;
-            cursor: not-allowed;
-        }
-
-        .available {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        /* Botão de voltar ao login */
-        .back-button {
-            padding: 10px 20px;
-            font-size: 1em;
-            font-weight: bold;
-            color: white;
-            background: linear-gradient(135deg, #6c757d, #5a6268);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .back-button:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #5a6268, #444b50);
-        }
-
-        /* Centraliza o botão "Voltar ao Login" */
-        .back-button[onclick="returnToLogin()"] {
-            margin: 20px auto;
-            display: block;
-        }
-
-        /* Media Queries para dispositivos móveis */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
-
-            .day-button {
-                padding: 10px 15px;
-                font-size: 1em;
-            }
-
-            .slot {
-                width: 100px;
-                height: 40px;
-                font-size: 0.9em;
-            }
-
-            #login div {
-                padding: 20px;
-            }
-
-            #calendar-container {
-                padding: 15px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.5em;
-            }
-
-            .day-button {
-                padding: 8px 12px;
-                font-size: 0.9em;
-            }
-
-            .slot {
-                width: 80px;
-                height: 35px;
-                font-size: 0.8em;
-            }
-
-            #login div {
-                padding: 15px;
-            }
-
-            #calendar-container {
-                padding: 10px;
-            }
-        }
-    </style>>
-</head>
-
-<body>
-
-    <h1>Agendamento de Horários</h1>
-
-    <div id="login"
-        style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #007bff, #0056b3, #ff7f50);">
-        <div
-            style="background: #ffffff; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); width: 100%; max-width: 400px;">
-            <h2 style="text-align: center; color: #333; margin-bottom: 20px; font-size: 1.8em; font-weight: bold;">
-                Bem-vindo</h2>
-            <input type="text" id="username" placeholder="Usuário"
-                style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
-            <input type="password" id="password" placeholder="Senha"
-                style="width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
-            <button onclick="login()"
-                style="width: 100%; padding: 12px; background: linear-gradient(135deg, #007bff, #0056b3); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold;">Entrar</button>
-            <button onclick="showRegisterForm()"
-                style="width: 100%; padding: 12px; margin-top: 10px; background: linear-gradient(135deg, #28a745, #218838); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold;">Cadastrar-se</button>
-        </div>
-    </div>
-
-    <div id="register"
-        style="display: none; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #007bff, #0056b3, #ff7f50);">
-        <div
-            style="background: #ffffff; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); width: 100%; max-width: 400px;">
-            <h2 style="text-align: center; color: #333; margin-bottom: 20px; font-size: 1.8em; font-weight: bold;">Criar
-                Conta</h2>
-            <input type="text" id="new-username" placeholder="Usuário"
-                style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
-            <input type="password" id="new-password" placeholder="Senha"
-                style="width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
-            <button onclick="register()"
-                style="width: 100%; padding: 12px; background: linear-gradient(135deg, #28a745, #218838); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold;">Registrar</button>
-            <button onclick="showLoginForm()"
-                style="width: 100%; padding: 12px; margin-top: 10px; background: linear-gradient(135deg, #6c757d, #5a6268); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold;">Voltar</button>
-        </div>
-    </div>
-
-    <div id="calendar-container">
-        <div id="calendar"></div>
-        <button class="back-button" onclick="goBack()">Voltar</button>
-        <div class="admin-controls" id="admin-controls" style="display: none;">
-            <button class="admin-button add-slot" onclick="addSlot()">Adicionar Horário</button>
-            <button class="admin-button remove-slot" onclick="removeSlot()">Remover Horário</button>
-            <button class="admin-button clear-slots" onclick="clearAllSlots()">Limpar Todos os Horários</button>
-        </div>
-    </div>
-
-    <!-- Botão "Voltar ao Login" fora do contêiner -->
-    <button class="back-button" onclick="returnToLogin()" style="margin: 20px auto; display: block;">Voltar ao
-        Login</button>
-
-    <div id="days-container" style="display: none;">
-        <button class="day-button" onclick="selectDay('domingo')">Domingo</button>
-        <button class="day-button" onclick="selectDay('segunda')">Segunda</button>
-        <button class="day-button" onclick="selectDay('terça')">Terça</button>
-        <button class="day-button" onclick="selectDay('quarta')">Quarta</button>
-        <button class="day-button" onclick="selectDay('quinta')">Quinta</button>
-        <button class="day-button" onclick="selectDay('sexta')">Sexta</button>
-        <button class="day-button" onclick="selectDay('sábado')">Sábado</button>
-    </div>
-    </div>
-
-    <div id="calendar-container">
-        <div id="calendar"></div>
-        <button class="back-button" onclick="goBack()">Voltar</button>
-        <div class="admin-controls" id="admin-controls" style="display: none;">
-            <button class="admin-button add-slot" onclick="addSlot()">Adicionar Horário</button>
-            <button class="admin-button remove-slot" onclick="removeSlot()">Remover Horário</button>
-            <button class="admin-button clear-slots" onclick="clearAllSlots()">Limpar Todos os Horários</button>
-        </div>
-    </div>
-
-    <div id="date-picker-container" style="display: none; text-align: center; margin-top: 20px;">
-        <h3>Ou escolha uma data específica:</h3>
-        <input type="date" id="specific-date"
-            style="padding: 10px; font-size: 16px; border: 1px solid #ddd; border-radius: 5px;">
-        <button onclick="selectSpecificDate()"
-            style="padding: 10px 20px; margin-left: 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;">
-            Selecionar Data
-        </button>
-    </div>
-
-    <div id="admin-menu" style="display: none; text-align: center; margin-top: 20px;">
-        <button onclick="toggleUserList()"
-            style="padding: 12px 20px; background: linear-gradient(135deg, #007bff, #0056b3); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin: 10px;">
-            Menu do Administrador
-        </button>
-        <div id="user-list"
-            style="display: none; margin-top: 20px; background: #f4f4f4; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-            <h3>Usuários Cadastrados</h3>
-            <ul id="user-list-content" style="list-style: none; padding: 0; font-size: 16px; color: #333;"></ul>
-        </div>
-    </div>
-
-    <script>
-        const API_URL = 'http://192.168.100.9:3000'; // Substitua SEU_ENDERECO_IP_LOCAL pelo IP do servidor
-    </script>
-
-    <script>
-        // Lista de horários por dia da semana
-        let weekSlots = JSON.parse(localStorage.getItem('weekSlots')) || {
-            domingo: [],
-            segunda: [],
-            terça: [],
-            quarta: [],
-            quinta: [],
-            sexta: [],
-            sábado: []
-        };
-
-        let currentDay = null;
-
-        const daysContainer = document.getElementById('days-container');
-        const calendarContainer = document.getElementById('calendar-container');
-        const calendar = document.getElementById('calendar');
-        const adminControls = document.getElementById('admin-controls');
-        const loginForm = document.getElementById('login');
-
-        // Salva os horários no Local Storage
-        function saveSlotsToLocalStorage() {
-            localStorage.setItem('weekSlots', JSON.stringify(weekSlots));
-        }
-
-        // Renderiza os horários de um dia específico
-        function renderSlots(day) {
-            calendar.innerHTML = '';
-            weekSlots[day].forEach((slot, index) => {
-                const slotDiv = document.createElement('div');
-                slotDiv.className = 'slot ' + (slot.occupied ? 'occupied' : 'available');
-                slotDiv.innerText = slot.time;
-
-
-                // Clique no horário
-                slotDiv.onclick = () => {
-                    if (!slot.occupied) {
-                        const clientName = prompt('Digite seu nome para confirmar o horário:');
-                        if (clientName) {
-                            // Marca o horário como ocupado
-                            weekSlots[day][index].occupied = true;
-                            weekSlots[day][index].clientName = clientName; // Salva o nome do cliente
-                            saveSlotsToLocalStorage();
-                            renderSlots(day);
-
-                            // Envia mensagem para o WhatsApp
-                            const message = `Olá, gostaria de agendar o horário: ${slot.time}\n*Nome:* ${clientName}`;
-                            const phoneNumber = "5534988302860"; // Substitua pelo número da dona
-                            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-                            const confirmSend = confirm('Você será redirecionado para o WhatsApp para confirmar o agendamento. Deseja continuar?');
-
-                            if (confirmSend) {
-                                window.open(whatsappUrl, '_blank');
-                            } else {
-                                // Libera o horário se o cliente não enviar a mensagem
-                                weekSlots[day][index].occupied = false;
-                                delete weekSlots[day][index].clientName; // Remove o nome do cliente
-                                saveSlotsToLocalStorage();
-                                renderSlots(day);
-                            }
-                        }
-                    } else {
-                        // Verifica se o usuário é administrador
-                        const isAdmin = adminControls.style.display === 'block';
-                        if (isAdmin) {
-                            const cancel = confirm(`Este horário foi agendado por: ${slot.clientName}\nDeseja cancelar o agendamento?`);
-                            if (cancel) {
-                                weekSlots[day][index].occupied = false;
-                                delete weekSlots[day][index].clientName; // Remove o nome do cliente
-                                saveSlotsToLocalStorage();
-                                renderSlots(day);
-                                alert('Agendamento cancelado com sucesso.');
-                            }
-                        } else {
-                            alert('Este horário já está ocupado!');
-                        }
-                    }
-                };
-
-                calendar.appendChild(slotDiv);
+            eventosContainer.innerHTML = '<h2>Próximos Eventos</h2>';
+            eventos.forEach(evento => {
+                const eventoDiv = document.createElement('div');
+                eventoDiv.className = 'evento';
+                eventoDiv.innerHTML = `
+                    <h3>${evento.nome}</h3>
+                    <p>Data: ${new Date(evento.data).toLocaleDateString()}</p>
+                    <p>Local: ${evento.local}</p>
+                    <button onclick="inscrever('${evento.nome}')">Inscrever-se</button>
+                `;
+                eventosContainer.appendChild(eventoDiv);
             });
+        } else {
+            console.error('Erro ao carregar eventos:', response.statusText);
         }
+    } catch (error) {
+        console.error('Erro ao conectar ao servidor:', error);
+    }
+}
 
-        // Seleciona um dia da semana
-        function selectDay(day) {
-            currentDay = day;
-            daysContainer.style.display = 'none';
-            calendarContainer.style.display = 'flex';
-            renderSlots(day);
-        }
-
-        // Volta para a seleção de dias
-        function goBack() {
-            calendarContainer.style.display = 'none';
-            daysContainer.style.display = 'flex';
-        }
-
-        function clearAllSlots() {
-            const confirmClear = confirm('Tem certeza de que deseja apagar todos os horários? Esta ação não pode ser desfeita.');
-            if (confirmClear) {
-                Object.keys(weekSlots).forEach(day => {
-                    weekSlots[day] = []; // Limpa todos os horários do dia
-                });
-                saveSlotsToLocalStorage(); // Salva no Local Storage
-                if (currentDay) {
-                    renderSlots(currentDay); // Atualiza o calendário para o dia atual
-                }
-                alert('Todos os horários foram apagados com sucesso!');
-            }
-        }
-
-        // Adiciona um novo horário (somente para o administrador)
-        function addSlot() {
-            // Cria um contêiner para o seletor de horário
-            const timePickerContainer = document.createElement('div');
-            timePickerContainer.style.position = 'fixed';
-            timePickerContainer.style.top = '50%';
-            timePickerContainer.style.left = '50%';
-            timePickerContainer.style.transform = 'translate(-50%, -50%)';
-            timePickerContainer.style.background = '#ffffff';
-            timePickerContainer.style.padding = '20px';
-            timePickerContainer.style.borderRadius = '10px';
-            timePickerContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-            timePickerContainer.style.textAlign = 'center';
-            timePickerContainer.style.zIndex = '1000';
-
-            // Adiciona um título
-            const title = document.createElement('h3');
-            title.innerText = `Escolha o horário para ${currentDay}`;
-            title.style.marginBottom = '15px';
-            timePickerContainer.appendChild(title);
-
-            // Adiciona o seletor de horário
-            const timeInput = document.createElement('input');
-            timeInput.type = 'time';
-            timeInput.style.padding = '10px';
-            timeInput.style.fontSize = '16px';
-            timeInput.style.border = '1px solid #ddd';
-            timeInput.style.borderRadius = '5px';
-            timeInput.style.marginBottom = '15px';
-            timePickerContainer.appendChild(timeInput);
-
-            // Adiciona o botão de confirmação
-            const confirmButton = document.createElement('button');
-            confirmButton.innerText = 'Adicionar Horário';
-            confirmButton.style.padding = '10px 20px';
-            confirmButton.style.background = 'linear-gradient(135deg, #007bff, #0056b3)';
-            confirmButton.style.color = 'white';
-            confirmButton.style.border = 'none';
-            confirmButton.style.borderRadius = '5px';
-            confirmButton.style.fontSize = '16px';
-            confirmButton.style.cursor = 'pointer';
-            confirmButton.style.marginRight = '10px';
-            confirmButton.onclick = () => {
-                const newTime = timeInput.value;
-                if (newTime) {
-                    weekSlots[currentDay].push({ time: newTime, occupied: false, reminded: false });
-                    saveSlotsToLocalStorage();
-                    renderSlots(currentDay);
-                    alert('Horário adicionado com sucesso!');
-                    document.body.removeChild(timePickerContainer); // Remove o contêiner
-                } else {
-                    alert('Por favor, escolha um horário válido.');
-                }
-            };
-            timePickerContainer.appendChild(confirmButton);
-
-            // Adiciona o botão de cancelamento
-            const cancelButton = document.createElement('button');
-            cancelButton.innerText = 'Cancelar';
-            cancelButton.style.padding = '10px 20px';
-            cancelButton.style.background = 'linear-gradient(135deg, #6c757d, #5a6268)';
-            cancelButton.style.color = 'white';
-            cancelButton.style.border = 'none';
-            cancelButton.style.borderRadius = '5px';
-            cancelButton.style.fontSize = '16px';
-            cancelButton.style.cursor = 'pointer';
-            cancelButton.onclick = () => {
-                document.body.removeChild(timePickerContainer); // Remove o contêiner
-            };
-            timePickerContainer.appendChild(cancelButton);
-
-            // Adiciona o contêiner ao corpo
-            document.body.appendChild(timePickerContainer);
-        }
-
-        // Remove um horário (somente para o administrador)
-        function removeSlot() {
-            // Cria um contêiner para o seletor de horário
-            const timePickerContainer = document.createElement('div');
-            timePickerContainer.style.position = 'fixed';
-            timePickerContainer.style.top = '50%';
-            timePickerContainer.style.left = '50%';
-            timePickerContainer.style.transform = 'translate(-50%, -50%)';
-            timePickerContainer.style.background = '#ffffff';
-            timePickerContainer.style.padding = '20px';
-            timePickerContainer.style.borderRadius = '10px';
-            timePickerContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-            timePickerContainer.style.textAlign = 'center';
-            timePickerContainer.style.zIndex = '1000';
-
-            // Adiciona um título
-            const title = document.createElement('h3');
-            title.innerText = `Escolha o horário para remover em ${currentDay}`;
-            title.style.marginBottom = '15px';
-            timePickerContainer.appendChild(title);
-
-            // Adiciona o seletor de horário
-            const timeInput = document.createElement('input');
-            timeInput.type = 'time';
-            timeInput.style.padding = '10px';
-            timeInput.style.fontSize = '16px';
-            timeInput.style.border = '1px solid #ddd';
-            timeInput.style.borderRadius = '5px';
-            timeInput.style.marginBottom = '15px';
-            timePickerContainer.appendChild(timeInput);
-
-            // Adiciona o botão de confirmação
-            const confirmButton = document.createElement('button');
-            confirmButton.innerText = 'Remover Horário';
-            confirmButton.style.padding = '10px 20px';
-            confirmButton.style.background = 'linear-gradient(135deg, #dc3545, #c82333)';
-            confirmButton.style.color = 'white';
-            confirmButton.style.border = 'none';
-            confirmButton.style.borderRadius = '5px';
-            confirmButton.style.fontSize = '16px';
-            confirmButton.style.cursor = 'pointer';
-            confirmButton.style.marginRight = '10px';
-            confirmButton.onclick = () => {
-                const timeToRemove = timeInput.value;
-                const index = weekSlots[currentDay].findIndex(slot => slot.time === timeToRemove);
-                if (index !== -1) {
-                    weekSlots[currentDay].splice(index, 1); // Remove o horário da lista
-                    saveSlotsToLocalStorage(); // Salva no Local Storage
-                    renderSlots(currentDay); // Atualiza o calendário para o dia selecionado
-                    alert('Horário removido com sucesso!');
-                    document.body.removeChild(timePickerContainer); // Remove o contêiner
-                } else {
-                    alert('Horário não encontrado!');
-                }
-            };
-            timePickerContainer.appendChild(confirmButton);
-
-            // Adiciona o botão de cancelamento
-            const cancelButton = document.createElement('button');
-            cancelButton.innerText = 'Cancelar';
-            cancelButton.style.padding = '10px 20px';
-            cancelButton.style.background = 'linear-gradient(135deg, #6c757d, #5a6268)';
-            cancelButton.style.color = 'white';
-            cancelButton.style.border = 'none';
-            cancelButton.style.borderRadius = '5px';
-            cancelButton.style.fontSize = '16px';
-            cancelButton.style.cursor = 'pointer';
-            cancelButton.onclick = () => {
-                document.body.removeChild(timePickerContainer); // Remove o contêiner
-            };
-            timePickerContainer.appendChild(cancelButton);
-
-            // Adiciona o contêiner ao corpo
-            document.body.appendChild(timePickerContainer);
-        }
-
-        function scheduleReminders() {
-            setInterval(() => {
-                const now = new Date();
-                const currentTime = now.getTime();
-
-                Object.keys(weekSlots).forEach(day => {
-                    weekSlots[day].forEach(slot => {
-                        if (slot.occupied && !slot.reminded) {
-                            const slotTime = new Date(`${now.toDateString()} ${slot.time}`).getTime();
-                            const timeDifference = slotTime - currentTime;
-
-                            // Verifica se está a 15 minutos do horário agendado
-                            if (timeDifference > 0 && timeDifference <= 15 * 60 * 1000) {
-                                alert(`Lembrete: Você tem um agendamento às ${slot.time} no dia ${day}.`);
-                                slot.reminded = true; // Marca como lembrete enviado
-                                saveSlotsToLocalStorage(); // Atualiza o Local Storage
-                            }
-                        }
-                    });
-                });
-            }, 60 * 1000); // Verifica a cada minuto
-        }
-
-        // Atualiza os horários existentes para incluir o campo 'reminded'
-        Object.keys(weekSlots).forEach(day => {
-            weekSlots[day] = weekSlots[day].map(slot => ({
-                ...slot,
-                reminded: slot.reminded || false // Adiciona o campo 'reminded' se não existir
-            }));
-        });
-        saveSlotsToLocalStorage(); // Salva as alterações no Local Storage
-
-
-        // Login
-        async function login() {
-            const username = document.getElementById('username').value.toLowerCase(); // Converte para minúsculas
-            const password = document.getElementById('password').value;
-
-            if (username && password) {
-                try {
-                    const response = await fetch(`${API_URL}/login`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ username, password }),
-                    });
-
-                    if (response.ok) {
-                        alert('Login bem-sucedido!');
-                        loginForm.style.display = 'none';
-                        daysContainer.style.display = 'flex';
-                        adminControls.style.display = username === 'admin' ? 'block' : 'none';
-                    } else {
-                        alert('Usuário ou senha inválidos!');
-                    }
-                } catch (error) {
-                    console.error('Erro ao fazer login:', error);
-                    alert('Erro ao fazer login. Verifique sua conexão.');
-                }
-            } else {
-                alert('Por favor, preencha todos os campos.');
-            }
-        }
-
-        function selectSpecificDate() {
-            const dateInput = document.getElementById('specific-date').value;
-            if (dateInput) {
-                const clientName = prompt('Digite seu nome para confirmar a data:');
-                if (clientName) {
-                    // Envia mensagem para o WhatsApp
-                    const message = `Olá, gostaria de agendar para o dia: ${dateInput}\n*Nome:* ${clientName}`;
-                    const phoneNumber = "5534988302860"; // Substitua pelo número da dona
-                    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-                    const confirmSend = confirm('Você será redirecionado para o WhatsApp para confirmar o agendamento. Deseja continuar?');
-
-                    if (confirmSend) {
-                        window.open(whatsappUrl, '_blank');
-                    }
-                }
-            } else {
-                alert('Por favor, selecione uma data.');
-            }
-        }
-
-        // Atualiza os horários em tempo real ao detectar mudanças no Local Storage
-        window.addEventListener('storage', (event) => {
-            if (event.key === 'weekSlots') {
-                weekSlots = JSON.parse(event.newValue);
-                if (currentDay) {
-                    renderSlots(currentDay); // Atualiza os horários do dia atual
-                }
-            }
-        });
-
-
-
-        function cancelBooking(day, index) {
-            weekSlots[day][index].occupied = false;
-            weekSlots[day][index].reminded = false; // Redefine o campo 'reminded'
-            delete weekSlots[day][index].clientName; // Remove o nome do cliente
-            saveSlotsToLocalStorage(); // Salva no Local Storage
-            renderSlots(day); // Atualiza o calendário
-            alert('Agendamento cancelado com sucesso.');
-        }
-
-
-        // Função para exibir o formulário de cadastro
-        function showRegisterForm() {
-            document.getElementById('login').style.display = 'none';
-            document.getElementById('register').style.display = 'flex';
-        }
-
-        // Função para exibir o formulário de login
-        function showLoginForm() {
-            document.getElementById('register').style.display = 'none';
-            document.getElementById('login').style.display = 'flex';
-        }
-
-        // Função para registrar um novo usuário
-        async function register() {
-            const newUsername = document.getElementById('new-username').value.toLowerCase(); // Converte para minúsculas
-            const newPassword = document.getElementById('new-password').value;
-
-            if (newUsername && newPassword) {
-                try {
-                    const response = await fetch('http://localhost:3000/usuarios', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ username: newUsername, password: newPassword }),
-                    });
-
-                    if (response.ok) {
-                        alert('Cadastro realizado com sucesso!');
-                        showLoginForm();
-                    } else if (response.status === 400) {
-                        alert('Usuário já existe! Escolha outro nome de usuário.');
-                    } else {
-                        alert('Erro ao cadastrar usuário. Tente novamente.');
-                    }
-                } catch (error) {
-                    console.error('Erro ao cadastrar usuário:', error);
-                    alert('Erro ao cadastrar usuário. Verifique sua conexão.');
-                }
-            } else {
-                alert('Por favor, preencha todos os campos.');
-            }
-        }
-
-        // Função para voltar ao login a partir da página de agendamento
-        function returnToLogin() {
-            document.getElementById('calendar-container').style.display = 'none';
-            document.getElementById('login').style.display = 'flex';
-        }
-
-        // Função para alternar a exibição da lista de usuários
-        function toggleUserList() {
-            const userList = document.getElementById('user-list');
-            const userListContent = document.getElementById('user-list-content');
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-
-            if (userList.style.display === 'none') {
-                userList.style.display = 'block';
-                userListContent.innerHTML = ''; // Limpa a lista antes de renderizar
-
-                if (users.length > 0) {
-                    users.forEach((user, index) => {
-                        const listItem = document.createElement('li');
-                        listItem.textContent = `Usuário: ${user.username}`;
-
-                        // Botão para excluir o usuário
-                        const deleteButton = document.createElement('button');
-                        deleteButton.textContent = 'Excluir';
-                        deleteButton.style.marginLeft = '10px';
-                        deleteButton.style.padding = '5px 10px';
-                        deleteButton.style.background = 'linear-gradient(135deg, #dc3545, #c82333)';
-                        deleteButton.style.color = 'white';
-                        deleteButton.style.border = 'none';
-                        deleteButton.style.borderRadius = '5px';
-                        deleteButton.style.cursor = 'pointer';
-                        deleteButton.onclick = () => deleteUser(index);
-
-                        listItem.appendChild(deleteButton);
-                        userListContent.appendChild(listItem);
-                    });
-                } else {
-                    const noUsersMessage = document.createElement('li');
-                    noUsersMessage.textContent = 'Nenhum usuário cadastrado.';
-                    userListContent.appendChild(noUsersMessage);
-                }
-            } else {
-                userList.style.display = 'none';
-            }
-        }
-
-        // Função para excluir um usuário
-        function deleteUser(index) {
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const userToDelete = users[index];
-
-            const confirmDelete = confirm(`Tem certeza de que deseja excluir o usuário "${userToDelete.username}"?`);
-            if (confirmDelete) {
-                users.splice(index, 1); // Remove o usuário da lista
-                localStorage.setItem('users', JSON.stringify(users)); // Atualiza o Local Storage
-                alert(`Usuário "${userToDelete.username}" foi excluído com sucesso.`);
-                toggleUserList(); // Atualiza a lista de usuários exibida
-            }
-        }
-
-        // Exibe o menu do administrador ao fazer login como admin
-        function login() {
-            const username = document.getElementById('username').value.toLowerCase(); // Converte para minúsculas
-            const password = document.getElementById('password').value;
-
-            // Verifica se é o administrador
-            if (username === 'admin' && password === '1234') {
-                alert('Bem-vindo, Administrador!');
-                loginForm.style.display = 'none';
-                daysContainer.style.display = 'flex';
-                adminControls.style.display = 'block'; // Exibe os controles do administrador
-                document.getElementById('admin-menu').style.display = 'block'; // Exibe o menu do administrador
-                document.getElementById('date-picker-container').style.display = 'block'; // Exibe o seletor de data
-                scheduleReminders(); // Inicia os lembretes
-            } else {
-                // Verifica se é um cliente
-                const users = JSON.parse(localStorage.getItem('users')) || [];
-                const user = users.find(user => user.username.toLowerCase() === username && user.password === password);
-
-                if (user) {
-                    alert(`Bem-vindo, ${user.username}!`);
-                    loginForm.style.display = 'none';
-                    daysContainer.style.display = 'flex';
-                    adminControls.style.display = 'none'; // Esconde os controles do administrador
-                    document.getElementById('admin-menu').style.display = 'none'; // Esconde o menu do administrador
-                    document.getElementById('date-picker-container').style.display = 'block'; // Exibe o seletor de data para clientes
-                    scheduleReminders(); // Inicia os lembretes
-                } else {
-                    alert('Usuário ou senha inválidos!');
-                }
-            }
-        }
-
-
-        // Inicializa os horários
-        saveSlotsToLocalStorage();
-    </script>
-
-<script src="server.js"></script>
-
-</body>
-
-</html>
+// Carregar eventos ao carregar a página
+window.onload = () => {
+    iniciarEfeitoLuzes();
+    carregarEventos();
+};
