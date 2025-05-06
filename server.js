@@ -85,7 +85,7 @@ app.post('/api/eventos', async (req, res) => {
     }
 });
 
-// Alterando o host para permitir conexões externas
+// Alterando o host para 0.0.0.0 para aceitar conexões externas
 app.listen(port, '0.0.0.0', () => {
     console.log(`Servidor rodando em http://0.0.0.0:${port}`);
 });
