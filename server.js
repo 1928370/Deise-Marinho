@@ -1,6 +1,7 @@
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
+const path = require('path');
 const app = express();
 const port = 3000;
 
@@ -18,6 +19,14 @@ app.use(express.json());
 
 // Adicionando middleware para lidar com CORS
 app.use(cors());
+
+// Servindo arquivos estáticos da pasta atual
+app.use(express.static(path.join(__dirname)));
+
+// Rota para servir o arquivo index.html como página inicial
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // Endpoint de teste de conexão
 app.get('/api/teste', async (req, res) => {
