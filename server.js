@@ -76,7 +76,7 @@ app.post('/api/eventos', async (req, res) => {
     }
 });
 
-// Iniciar o servidor
-app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
+// Alterando o host para permitir conexões externas
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Servidor rodando em http://0.0.0.0:${port}`);
 });
