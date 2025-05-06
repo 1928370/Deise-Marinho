@@ -54,7 +54,7 @@ if (botaoDono) {
 // Função para enviar uma requisição POST para adicionar um evento
 async function enviarEvento(nome, data, local) {
     try {
-        const response = await fetch('http://localhost:3000/api/eventos', {
+        const response = await fetch('http://192.168.56.1:3000/api/eventos', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ async function enviarEvento(nome, data, local) {
 // Adicionando logs para depuração na função carregarEventos
 async function carregarEventos() {
     try {
-        const response = await fetch('http://localhost:3000/api/eventos');
+        const response = await fetch('http://192.168.56.1:3000/api/eventos');
         console.log('Resposta do servidor:', response);
         if (response.ok) {
             const eventos = await response.json();
