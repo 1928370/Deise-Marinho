@@ -17,8 +17,18 @@ const pool = new Pool({
 // Middleware para processar JSON
 app.use(express.json());
 
-// Adicionando middleware para lidar com CORS
-app.use(cors());
+// Configurando CORS para permitir conexões de qualquer origem
+app.use(cors({
+    origin: '*', // Permite conexões de qualquer origem
+    methods: ['GET', 'POST'], // Permite apenas métodos GET e POST
+    allowedHeaders: ['Content-Type'], // Permite cabeçalhos específicos
+}));
+
+// Middleware para registrar todas as requisições recebidas
+app.use((req, res, next) => {
+    console.log(`Requisição recebida: ${req.method} ${req.url} de ${req.ip}`);
+    next();
+});
 
 // Servindo arquivos estáticos da pasta atual
 app.use(express.static(path.join(__dirname)));
@@ -50,14 +60,16 @@ app.get('/api/testar-conexao', async (req, res) => {
     }
 });
 
-// Endpoint para listar eventos
+// Garantindo que o endpoint de listar eventos funcione corretamente
 app.get('/api/eventos', async (req, res) => {
     try {
+        console.log('Recebendo requisição para listar eventos...');
         const result = await pool.query('SELECT * FROM eventos ORDER BY data');
+        console.log('Eventos retornados do banco de dados:', result.rows);
         res.json(result.rows);
     } catch (error) {
         console.error('Erro ao listar eventos:', error);
-        res.status(500).json({ error: 'Erro ao listar eventos' });
+        res.status(500).json({ error: 'Erro ao listar eventos', detalhes: error.message });
     }
 });
 
