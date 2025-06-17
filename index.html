@@ -40,14 +40,22 @@
             border-bottom-left-radius: 3rem;
             border-bottom-right-radius: 3rem;
             position: relative;
+            overflow: hidden;
         }
-        .hero-gradient::before {
+        .hero-gradient::after {
             content: '';
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('img/casamento.webp') center/cover no-repeat;
-            opacity: 0.08;
-            z-index: 0;
+            top: -30px; right: -60px;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, #fff6 0%, #fff0 80%);
+            opacity: 0.7;
+            filter: blur(12px);
+            z-index: 1;
+            animation: luz-hero 3s infinite alternate;
+        }
+        @keyframes luz-hero {
+            0% { opacity: 0.7; right: -60px; }
+            100% { opacity: 0.3; right: 10px; }
         }
         .service-card {
             transition: transform 0.3s, box-shadow 0.3s;
@@ -182,6 +190,443 @@
             background: #d89b97;
             border-radius: 8px;
         }
+
+        @media (max-width: 640px) {
+            body {
+                font-size: 1rem;
+            }
+            .logo {
+                font-size: 2rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .section-subtitle {
+                font-size: 1rem;
+            }
+            h1, .font-serif {
+                font-size: 2rem !important;
+                word-break: break-word;
+            }
+            h2, h3, h4 {
+                font-size: 1.2rem !important;
+                word-break: break-word;
+            }
+            p, label, input, select, textarea, button {
+                font-size: 1rem !important;
+                word-break: break-word;
+            }
+            .container, .px-6 {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+            .service-card, .portfolio-card, form.bg-gray-50 {
+                padding: 1.2rem !important;
+            }
+            .hero-gradient {
+                border-bottom-left-radius: 1.5rem;
+                border-bottom-right-radius: 1.5rem;
+            }
+            .rounded-xl, .rounded-2xl {
+                border-radius: 1rem !important;
+            }
+            .shadow-xl, .shadow-2xl {
+                box-shadow: 0 4px 16px 0 rgba(229,184,180,0.13) !important;
+            }
+            .mb-6, .mb-8, .mb-10, .mb-16 {
+                margin-bottom: 1rem !important;
+            }
+            .mt-8, .mt-10, .mt-12, .mt-16 {
+                margin-top: 1rem !important;
+            }
+            .w-1\/2, .md\:w-1\/2, .lg\:w-1\/2 {
+                width: 100% !important;
+            }
+            .w-64, .w-72, .w-96, .h-64, .h-72, .h-96 {
+                width: 100% !important;
+                height: auto !important;
+                max-width: 320px !important;
+                margin: 0 auto !important;
+            }
+            .rounded-full {
+                border-radius: 50% !important;
+            }
+            .text-center, .text-left, .text-right {
+                text-align: center !important;
+            }
+            .items-center, .justify-center {
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            .px-10, .px-8, .px-6, .px-4 {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+            .py-4, .py-6, .py-8, .py-10, .py-12, .py-20, .py-24 {
+                padding-top: 1rem !important;
+                padding-bottom: 1rem !important;
+            }
+            .shadow-lg {
+                box-shadow: 0 2px 8px 0 rgba(229,184,180,0.13) !important;
+            }
+            input, select, textarea {
+                min-width: 0;
+                width: 100% !important;
+                box-sizing: border-box;
+            }
+            .overflow-hidden {
+                overflow-x: auto !important;
+            }
+            .hero-gradient .flex.space-x-4.mb-8 {
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 1.1rem !important;
+            }
+            .hero-gradient .bg-white,
+            .hero-gradient .instagram-btn {
+                width: auto !important;
+                min-width: 200px;
+                max-width: 340px;
+                display: inline-block !important;
+                margin: 0 auto !important;
+                padding: 1.1rem 2.5rem !important;
+                font-size: 1.13rem !important;
+                border-radius: 2.5rem !important;
+                box-shadow: 0 8px 32px 0 rgba(229,184,180,0.22) !important;
+                text-align: center;
+                font-family: 'Playfair Display', serif !important;
+                letter-spacing: 1px;
+                font-weight: 700;
+                transition: all 0.25s;
+            }
+            .hero-gradient .bg-white {
+                color: #d89b97 !important;
+                background: #fff !important;
+                border: 2.5px solid #d89b97 !important;
+                font-weight: 700;
+                text-shadow: 0 2px 8px #f3c6c2;
+            }
+            .hero-gradient .bg-white:hover {
+                background: #fbe4e0 !important;
+                color: #d89b97 !important;
+                box-shadow: 0 12px 32px 0 rgba(229,184,180,0.28) !important;
+                transform: scale(1.04);
+            }
+            .hero-gradient .instagram-btn {
+                background: linear-gradient(90deg, #e5b8b4 0%, #d89b97 100%) !important;
+                color: #fff !important;
+                font-weight: 700;
+                text-shadow: 0 2px 8px #d89b97;
+                border: none;
+            }
+            .hero-gradient .instagram-btn:hover {
+                background: linear-gradient(90deg, #d89b97 0%, #e5b8b4 100%) !important;
+                color: #fff !important;
+                box-shadow: 0 12px 32px 0 rgba(229,184,180,0.28) !important;
+                transform: scale(1.04);
+            }
+            .hero-gradient .instagram-btn i {
+                font-size: 1.3rem !important;
+                margin-right: 0.7rem !important;
+            }
+        }
+
+        /* EFEITO PREMIUM E MODERNO PARA OS BOTÕES EM TODAS AS TELAS */
+        .hero-gradient .bg-white,
+        .hero-gradient .instagram-btn {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            border-radius: 2.5rem;
+            box-shadow: 0 8px 32px 0 rgba(229,184,180,0.18);
+            transition: all 0.25s;
+            padding: 1.1rem 2.5rem;
+            font-size: 1.18rem;
+            margin: 0 0.5rem;
+        }
+        .hero-gradient .bg-white {
+            color: #d89b97;
+            background: #fff;
+            border: 2.5px solid #d89b97;
+            text-shadow: 0 2px 8px #f3c6c2;
+        }
+        .hero-gradient .bg-white:hover {
+            background: #fbe4e0;
+            color: #d89b97;
+            box-shadow: 0 12px 32px 0 rgba(229,184,180,0.28);
+            transform: scale(1.04);
+        }
+        .hero-gradient .instagram-btn {
+            background: linear-gradient(90deg, #e5b8b4 0%, #d89b97 100%);
+            color: #fff;
+            text-shadow: 0 2px 8px #d89b97;
+            border: none;
+        }
+        .hero-gradient .instagram-btn:hover {
+            background: linear-gradient(90deg, #d89b97 0%, #e5b8b4 100%);
+            color: #fff;
+            box-shadow: 0 12px 32px 0 rgba(229,184,180,0.28);
+            transform: scale(1.04);
+        }
+        .hero-gradient .instagram-btn i {
+            font-size: 1.3rem;
+            margin-right: 0.7rem;
+        }
+
+        /* EFEITO DE BRILHO ANIMADO NO HOVER DOS BOTÕES */
+        .hero-gradient .bg-white:hover, .hero-gradient .instagram-btn:hover {
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-gradient .bg-white:hover::after, .hero-gradient .instagram-btn:hover::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -75%; width: 50%; height: 100%;
+            background: linear-gradient(120deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.7) 100%);
+            transform: skewX(-20deg);
+            animation: brilho-botao 0.7s linear 1;
+        }
+        @keyframes brilho-botao {
+            0% { left: -75%; }
+            100% { left: 120%; }
+        }
+
+        /* HERO: FUNDO COM GRADIENTE ANIMADO E EFEITO DE LUZ */
+        .hero-gradient {
+            background: linear-gradient(120deg, #f3c6c2 0%, #e5b8b4 100%);
+            box-shadow: 0 8px 40px 0 rgba(229,184,180,0.18);
+            border-bottom-left-radius: 3rem;
+            border-bottom-right-radius: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-gradient::after {
+            content: '';
+            position: absolute;
+            top: -30px; right: -60px;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, #fff6 0%, #fff0 80%);
+            opacity: 0.7;
+            filter: blur(12px);
+            z-index: 1;
+            animation: luz-hero 3s infinite alternate;
+        }
+        @keyframes luz-hero {
+            0% { opacity: 0.7; right: -60px; }
+            100% { opacity: 0.3; right: 10px; }
+        }
+
+        /* HERO: IMAGEM PRINCIPAL COM BORDA ANIMADA */
+        .hero-gradient .relative.rounded-full {
+            border: 8px solid #fff;
+            box-shadow: 0 8px 32px 0 rgba(229,184,180,0.22);
+            animation: borda-pulse 2.5s infinite alternate;
+        }
+        @keyframes borda-pulse {
+            0% { box-shadow: 0 8px 32px 0 rgba(229,184,180,0.22); border-color: #fff; }
+            100% { box-shadow: 0 16px 48px 0 rgba(229,184,180,0.32); border-color: #d89b97; }
+        }
+
+        /* HERO: TÍTULO E SUBTÍTULO COM FUNDO BLUR PARA LEGIBILIDADE */
+        .hero-gradient .hero-text-blur {
+            display: inline-block;
+            background: rgba(216,155,151,0.18);
+            box-shadow: 0 4px 32px 0 rgba(229,184,180,0.18);
+            border-radius: 1.5rem;
+            padding: 0.7rem 1.5rem 0.7rem 1.5rem;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            position: relative;
+        }
+        .hero-gradient h1 {
+            background: linear-gradient(90deg, #d89b97 60%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 18px #b97c7a, 0 2px 12px #fff;
+            letter-spacing: 2px;
+            font-family: 'Playfair Display', serif;
+        }
+        .hero-gradient h2 {
+            background: linear-gradient(90deg, #b97c7a 60%, #e5b8b4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 12px #fff, 0 2px 8px #b97c7a;
+            font-family: 'Montserrat', sans-serif;
+        }
+        @media (max-width: 640px) {
+            .hero-gradient .hero-text-blur {
+                padding: 0.5rem 0.7rem;
+                border-radius: 1rem;
+            }
+        }
+
+        /* HERO: PARÁGRAFO COM SOMBRA E DESTAQUE */
+        .hero-gradient p {
+            color: #fff;
+            text-shadow: 0 2px 8px #d89b97;
+            font-size: 1.18rem;
+            font-weight: 500;
+            background: rgba(255,255,255,0.08);
+            border-radius: 1.2rem;
+            padding: 0.7rem 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        /* HERO: RESPONSIVO */
+        @media (max-width: 640px) {
+            .hero-gradient h1 {
+                font-size: 2.2rem !important;
+            }
+            .hero-gradient h2 {
+                font-size: 1.3rem !important;
+            }
+            .hero-gradient p {
+                font-size: 1.05rem !important;
+                padding: 0.6rem 0.7rem;
+            }
+        }
+
+        /* Fundo translúcido e blur para o texto do hero */
+    .hero-text-backdrop {
+        display: inline-block;
+        background: rgba(255,255,255,0.72);
+        box-shadow: 0 4px 32px 0 rgba(229,184,180,0.18);
+        border-radius: 1.5rem;
+        padding: 1.2rem 2.2rem 1.1rem 2.2rem;
+        margin-bottom: 1.5rem;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        position: relative;
+        z-index: 2;
+        text-align: left;
+    }
+    .hero-text-backdrop h1, .hero-text-backdrop h2 {
+        background: none !important;
+        -webkit-background-clip: initial !important;
+        -webkit-text-fill-color: initial !important;
+        background-clip: initial !important;
+        color: #b97c7a !important;
+        text-shadow: 0 4px 18px #fff, 0 2px 8px #d89b97, 0 1px 0 #fff;
+    }
+    .hero-text-backdrop h1 {
+        font-size: 2.7rem;
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        letter-spacing: 2px;
+        margin-bottom: 0.2em;
+    }
+    .hero-text-backdrop h2 {
+        font-size: 1.5rem;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 400;
+        letter-spacing: 1px;
+    }
+    @media (min-width: 768px) {
+        .hero-text-backdrop h1 { font-size: 3.5rem; }
+        .hero-text-backdrop h2 { font-size: 2rem; }
+    }
+    @media (min-width: 1024px) {
+        .hero-text-backdrop h1 { font-size: 4.2rem; }
+        .hero-text-backdrop h2 { font-size: 2.5rem; }
+    }
+    @media (max-width: 640px) {
+        .hero-text-backdrop {
+            padding: 0.7rem 1.1rem 0.7rem 1.1rem;
+            border-radius: 1rem;
+        }
+        .hero-text-backdrop h1 { font-size: 1.5rem !important; }
+        .hero-text-backdrop h2 { font-size: 1.1rem !important; }
+    }
+    /* BOTÃO INSTAGRAM FOOTER MOBILE VISION */
+        .footer .mobilevision-instagram-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(90deg, #e5b8b4 0%, #d89b97 100%);
+            color: #fff;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.18rem;
+            letter-spacing: 1px;
+            border: none;
+            border-radius: 2.5rem;
+            box-shadow: 0 8px 32px 0 rgba(229,184,180,0.18);
+            padding: 1.1rem 2.5rem;
+            margin: 0 auto;
+            transition: all 0.25s;
+            min-width: 220px;
+            max-width: 340px;
+            text-align: center;
+        }
+        .footer .mobilevision-instagram-btn:hover {
+            background: linear-gradient(90deg, #d89b97 0%, #e5b8b4 100%);
+            color: #fff;
+            box-shadow: 0 12px 32px 0 rgba(229,184,180,0.28);
+            transform: scale(1.04);
+        }
+        .footer .mobilevision-instagram-btn i {
+            font-size: 1.6rem;
+            margin-right: 0.9rem;
+        }
+        @media (max-width: 640px) {
+            .footer .mobilevision-instagram-btn {
+                font-size: 1.08rem;
+                padding: 1rem 1.5rem;
+                min-width: 180px;
+                max-width: 98vw;
+            }
+            .footer .mobilevision-instagram-btn i {
+                font-size: 1.4rem;
+                margin-right: 0.7rem;
+            }
+        }
+
+        /* BOTÃO PORTFÓLIO DO CRIADOR NO FOOTER */
+        .footer .mobilevision-portfolio-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            color: #b97c7a;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid #e5b8b4;
+            border-radius: 2rem;
+            box-shadow: 0 2px 12px 0 rgba(229,184,180,0.10);
+            padding: 0.7rem 1.5rem;
+            margin: 0 auto;
+            margin-top: 0.7rem;
+            transition: all 0.22s;
+            min-width: 150px;
+            max-width: 260px;
+            text-align: center;
+        }
+        .footer .mobilevision-portfolio-btn:hover {
+            background: #fbe4e0;
+            color: #d89b97;
+            border-color: #d89b97;
+            box-shadow: 0 4px 18px 0 rgba(229,184,180,0.18);
+            transform: scale(1.04);
+        }
+        .footer .mobilevision-portfolio-btn i {
+            font-size: 1.2rem;
+            margin-right: 0.6rem;
+        }
+        @media (max-width: 640px) {
+            .footer .mobilevision-portfolio-btn {
+                font-size: 0.97rem;
+                padding: 0.6rem 1.1rem;
+                min-width: 120px;
+                max-width: 90vw;
+            }
+            .footer .mobilevision-portfolio-btn i {
+                font-size: 1.1rem;
+                margin-right: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -210,8 +655,10 @@
         <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1500&q=80')] bg-cover bg-center z-0"></div>
         <div class="container mx-auto px-6 flex flex-col md:flex-row items-center relative z-10">
             <div class="md:w-1/2 mb-10 md:mb-0">
-                <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 font-serif drop-shadow-xl">Deise Marinho</h1>
-                <h2 class="text-3xl md:text-4xl text-white mb-8 font-light tracking-wide">Cerimonialista & Assessora de Eventos</h2>
+                <div class="hero-text-backdrop mb-6">
+                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-2 font-serif drop-shadow-2xl">Deise Marinho</h1>
+                    <h2 class="text-3xl md:text-4xl text-white font-light tracking-wide drop-shadow-2xl">Cerimonialista & Assessora de Eventos</h2>
+                </div>
                 <p class="text-white text-xl mb-8 max-w-lg leading-relaxed drop-shadow-lg">Transformando sonhos em realidade com planejamento impecável, criatividade e execução perfeita para o seu dia especial.</p>
                 <div class="flex space-x-4 mb-8">
                     <a href="#contact" class="bg-white text-pink-600 px-10 py-4 rounded-full font-semibold text-lg shadow-lg hover:bg-pink-50 transition">Solicite um Orçamento</a>
@@ -222,7 +669,7 @@
             </div>
             <div class="md:w-1/2 flex justify-center">
                 <div class="relative w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-8 border-white shadow-2xl bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center">
-                    <img src="img/deise.png" alt="Deise Marinho" class="w-full h-full object-cover object-top" />
+                    <img src="img/logo.png" alt="Deise Marinho" class="w-full h-full object-cover object-top" />
                 </div>
             </div>
         </div>
@@ -463,9 +910,7 @@
                             <a href="#" class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 hover:bg-pink-200 transition">
                                 <i class="fab fa-facebook-f"></i>
                             </a>
-                            <a href="#" class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 hover:bg-pink-200 transition">
-                                <i class="fab fa-pinterest-p"></i>
-                            </a>
+                            
                         </div>
                     </div>
                 </div>
@@ -548,8 +993,11 @@
                 <div class="mb-6 md:mb-0 flex flex-col items-center">
                     <img src="img/mobile.png" alt="Logo Mobile Vision" class="h-36 w-auto mb-3 drop-shadow-lg" style="background: none; border-radius: 0;" />
                     <p class="text-gray-400 text-center">Transformando ideias em soluções digitais.<br>Fotografia, Videografia, Edição, Criação de Site</p>
-                    <a href="https://www.instagram.com/mobilevision4/" target="_blank" class="mt-4 inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-pink-400 to-pink-600 text-white font-semibold shadow-lg hover:from-pink-600 hover:to-pink-400 transition text-lg">
-                        <i class="fab fa-instagram mr-2 text-xl"></i> Instagram
+                    <a href="https://www.instagram.com/mobilevision4/" target="_blank" class="mobilevision-instagram-btn mt-4">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </a>
+                    <a href="https://1928370.github.io/Postfolio/?fbclid=PAZXh0bgNhZW0CMTEAAacYWfCGOnX1sCe_IMOOOC_cWfUFzi82OT6WDeFfPqtsoJ-Vlz44HwO4Ue43ug_aem_GXfhrR1JniM341PaEB6G-w" target="_blank" class="mobilevision-portfolio-btn mt-3">
+                        <i class="fas fa-user-circle"></i> Portfólio do Criador
                     </a>
                 </div>
                 <div class="flex flex-col md:flex-row md:space-x-10 space-y-6 md:space-y-0 mt-8 md:mt-0">
